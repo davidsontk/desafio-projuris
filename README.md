@@ -19,7 +19,7 @@ Com isso ele irá baixar as dependências do projeto.
 ```sh
  $ mvn clean install
 ```
-Depois de instaladas as dependências. É necessário acessar a pasta target 
+Depois de instaladas as dependências. É necessário acessar a pasta target dentro do projeto e  
 e executar o comando.
 
 ```sh
@@ -28,5 +28,5 @@ e executar o comando.
 Com isso o projeto irá inicializar na porta 8080.
 
 # Endpoints mapeados no Postman
-Está disponível no [link](https://www.postman.com/collections/082faec2ee41c942cca3).
+Para facilitar o trabalho, os endponts estão no [link](https://www.postman.com/collections/082faec2ee41c942cca3).
 Abra o Postman e va no aba Import > Import From Link, para importar os endpoints mapeados.
