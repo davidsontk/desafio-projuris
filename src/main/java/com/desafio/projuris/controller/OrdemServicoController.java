@@ -50,7 +50,7 @@ public class OrdemServicoController {
     }
 
     /**
-     * Endpoint registra o responsavel que ira fazer o atendimento na ordem de servico. Atribuindo data inicial e
+     * Endpoint registra o responsavel que ira fazer o atendimento na ordem de servico. Atribuindo data inicial, responsavel e
      * deixando ela com o status EM ATENDIMENTO.
      *
      * Exemplo de dados JSON passado via endpoint:

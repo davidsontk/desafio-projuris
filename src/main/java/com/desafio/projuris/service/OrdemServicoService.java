@@ -116,10 +116,11 @@ public class OrdemServicoService {
                                 " já se encontra fechada."), HttpStatus.OK);
                     }
                     ordemServicoPendencia.get().setDataEncerramento(new Date());
-                    ordemServico.get().setStatus(StatusOrdemEnum.EM_ATENDIMENTO.getStatusOrdem());
-                    ordemServicoRepository.save(ordemServico.get());
                     ordemServicoPendenciaRepository.save(ordemServicoPendencia.get());
-
+                    if(verificarSeOrdemNaoPossuiPendenciasAbertas(ordemServico.get())) {
+                        ordemServico.get().setStatus(StatusOrdemEnum.EM_ATENDIMENTO.getStatusOrdem());
+                        ordemServicoRepository.save(ordemServico.get());
+                    }
                     return new ResponseEntity<>(ordemServicoPendencia.get(), HttpStatus.OK);
                 }
             }
@@ -168,6 +169,14 @@ public class OrdemServicoService {
             pendencia.setDataEncerramento(new Date());
             ordemServicoPendenciaRepository.save(pendencia);
         });
+    }
+
+    private boolean verificarSeOrdemNaoPossuiPendenciasAbertas(OrdemServico ordemServico) {
+        List<OrdemServicoPendencia> listaPendencias = ordemServicoPendenciaRepository.findAllByOrdemServicoIdAndDataEncerramentoIsNull(ordemServico);
+        if (listaPendencias.isEmpty()){
+            return true;
+        }
+        return false;
     }
 
 }
