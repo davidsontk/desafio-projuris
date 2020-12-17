@@ -28,5 +28,5 @@ e executar o comando.
 Com isso o projeto irá inicializar na porta 8080.
 
 # Endpoints mapeados no Postman
-Para facilitar o trabalho, os endponts estão no [link](https://www.postman.com/collections/082faec2ee41c942cca3).
+Para facilitar o trabalho, os endponts estão no [link](https://www.getpostman.com/collections/082faec2ee41c942cca3).
 Abra o Postman e va no aba Import > Import From Link, para importar os endpoints mapeados.
