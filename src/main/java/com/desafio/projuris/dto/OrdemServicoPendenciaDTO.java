@@ -7,4 +7,5 @@ public class OrdemServicoPendenciaDTO {
 
     private String descricao;
     private Integer idOrdemServico;
+    private Integer idOrdemServicoPendencia;
 }
