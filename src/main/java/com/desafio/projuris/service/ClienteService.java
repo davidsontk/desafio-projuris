@@ -27,6 +27,12 @@ public class ClienteService {
     @Autowired
     private EnderecoClienteRepository enderecoClienteRepository;
 
+    /**
+     * Metodo registra um cliente, levando em conta que o email nao deve ser o mesmo. Caso o cliente ja exista,
+     * retorna ele.
+     * @param cliente
+     * @return Cliente
+     */
     public Cliente registrarCliente(Cliente cliente) {
         Optional<Cliente> clienteAux = clienteRepository.findByEmailIgnoreCase(cliente.getEmail().toLowerCase());
         if (clienteAux.isPresent()) {
@@ -36,14 +42,23 @@ public class ClienteService {
         return clienteRepository.save(cliente);
     }
 
+    /**
+     * Metodo converte um clienteDTO para um Cliente.
+     * @param clienteDTO
+     * @return Cliente
+     */
     public Cliente converterParaCliente(ClienteDTO clienteDTO) {
         EnderecoCliente enderecoCliente = enderecoClienteMapper.converterParaEnderecoCliente(clienteDTO.getEndereco());
         return clienteMapper.converterParaCliente(clienteDTO, enderecoCliente);
     }
 
+    /**
+     * Metodo salva o endereco de um cliente e retorna ele.
+     * @param enderecoCliente
+     * @return EnderecoCliente
+     */
     public EnderecoCliente registrarEndereco(EnderecoCliente enderecoCliente) {
         return enderecoClienteRepository.save(enderecoCliente);
     }
-
 
 }

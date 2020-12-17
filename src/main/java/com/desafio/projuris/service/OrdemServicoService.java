@@ -43,6 +43,11 @@ public class OrdemServicoService {
     @Autowired
     private OrdemServicoPendenciaRepository ordemServicoPendenciaRepository;
 
+    /**
+     * Metodo registra uma ordem de servico, salvando a ordem de servico, cliente e endereco do cliente.
+     * @param ordemServicoDTO
+     * @return OrdemServico
+     */
     public OrdemServico registrarOrdemServico(OrdemServicoDTO ordemServicoDTO) {
         try {
             Cliente cliente = clienteService.converterParaCliente(ordemServicoDTO.getCliente());
@@ -55,6 +60,12 @@ public class OrdemServicoService {
         throw new ExcecaoNegocio(ErroCodeEnum.ERRO_AO_SALVAR_ORDEM_SERVICO);
     }
 
+    /**
+     * Metodo registra o inicio de atendimento, onde registra a data, o responsavel assume a ordem de servico e altera
+     * o status da ordem para EM_ATENDIMENTO.
+     * @param registroAtendimentoDTO
+     * @return OrdemServico
+     */
     public OrdemServico registrarInicioAtendimento(RegistroAtendimentoDTO registroAtendimentoDTO) {
         try {
             Optional<OrdemServico> ordemServico = ordemServicoRepository.findById(registroAtendimentoDTO.getIdOrdemServico());
@@ -70,6 +81,11 @@ public class OrdemServicoService {
         throw new ExcecaoNegocio(ErroCodeEnum.ERRO_AO_SALVAR_INICIO_ATENDIMENTO);
     }
 
+    /**
+     * Metodo registra o final de um atendimento, setando resolucao na ordem e data final e mudando status para FINALIZADO.
+     * @param registroAtendimentoDTO
+     * @return OrdemServico
+     */
     public OrdemServico registarFinalAtendimento(RegistroAtendimentoDTO registroAtendimentoDTO) {
         try {
             Optional<OrdemServico> ordemServico = ordemServicoRepository.findById(registroAtendimentoDTO.getIdOrdemServico());
@@ -86,6 +102,12 @@ public class OrdemServicoService {
         throw new ExcecaoNegocio(ErroCodeEnum.ERRO_AO_SALVAR_FINAL_ATENDIMENTO);
     }
 
+    /**
+     * Metodo registra uma pendencia para ordem e altera o status da ordem para PENDENTE. Tambem salva a descricao da pendencia
+     * e data de inicio
+     * @param ordemServicoPendenciaDTO
+     * @return OrdemServicoPendencia
+     */
     public OrdemServicoPendencia registrarInicioPendenciaOrdemServico (OrdemServicoPendenciaDTO ordemServicoPendenciaDTO) {
         try {
             Optional<OrdemServico> ordemServico = ordemServicoRepository.findById(ordemServicoPendenciaDTO.getIdOrdemServico());
@@ -104,6 +126,12 @@ public class OrdemServicoService {
         throw new ExcecaoNegocio(ErroCodeEnum.ERRO_AO_SALVAR_PENDENCIA);
     }
 
+    /**
+     * Metodo registra a finalizacao de uma pendencia, voltando a ordem para o status EM ATENDIMENTO. Caso nao tenha mais
+     * nenhuma pendencia aberta. Tambem seta a data final da pendencia.
+     * @param ordemServicoPendenciaDTO
+     * @return ResponseEntity<Object>
+     */
     public ResponseEntity<Object> registrarFinalizacaoPendenciaOrdemServico(OrdemServicoPendenciaDTO ordemServicoPendenciaDTO) {
         try {
             Optional<OrdemServico> ordemServico = ordemServicoRepository.findById(ordemServicoPendenciaDTO.getIdOrdemServico());
@@ -130,6 +158,11 @@ public class OrdemServicoService {
         throw new ExcecaoNegocio(ErroCodeEnum.ERRO_AO_SALVAR_PENDENCIA);
     }
 
+    /**
+     * Metodo lista as ordens de servico que estao com o status PENDENTE e EM ATENDIMENTO por responsavel.
+     * @param responsavel
+     * @return List<OrdemServico>
+     */
     public List<OrdemServico> buscarOrdensServicoPorResponsavel(String responsavel) {
         try {
             return ordemServicoRepository.findAllByStatusInAndResponsavelIgnoreCase(Arrays.asList(StatusOrdemEnum.PENDENTE.getStatusOrdem(),
@@ -142,6 +175,10 @@ public class OrdemServicoService {
     }
 
 
+    /**
+     * Metodo retorna todas as ordens de servico salvas no banco
+     * @return List<OrdemServico>
+     */
     public List<OrdemServico> buscarTodasOrdens() {
         try {
             return ordemServicoRepository.findAll();
@@ -151,6 +188,11 @@ public class OrdemServicoService {
         throw new ExcecaoNegocio(ErroCodeEnum.ERRO_AO_BUSCAR_ORDENS);
     }
 
+    /**
+     * Metodo lista todas pendencias de uma determinada Ordem de servico pelo id da ordem de servico.
+     * @param ordemServicoId
+     * @return List<OrdemServicoPendencia>
+     */
     public List<OrdemServicoPendencia> buscarOrdensServicoPendenciaPorOrdemId(Integer ordemServicoId) {
         try {
             Optional<OrdemServico> ordemServico = ordemServicoRepository.findById(ordemServicoId);
@@ -163,6 +205,10 @@ public class OrdemServicoService {
         throw new ExcecaoNegocio(ErroCodeEnum.ERRO_AO_BUSCAR_ORDENS_PENDENCIA);
     }
 
+    /**
+     * Metodo finaliza todas as pendencias de uma ordem de servico.
+     * @param ordemServico
+     */
     private void finalizarPendencias(OrdemServico ordemServico) {
         List<OrdemServicoPendencia> listaPendencias = ordemServicoPendenciaRepository.findAllByOrdemServicoIdAndDataEncerramentoIsNull(ordemServico);
         listaPendencias.forEach(pendencia -> {
@@ -171,6 +217,11 @@ public class OrdemServicoService {
         });
     }
 
+    /**
+     * Metodo verifica se a ordem de servico possui alguma pendencia aberta. Retornando um booleano como resposta.
+     * @param ordemServico
+     * @return boolean
+     */
     private boolean verificarSeOrdemNaoPossuiPendenciasAbertas(OrdemServico ordemServico) {
         List<OrdemServicoPendencia> listaPendencias = ordemServicoPendenciaRepository.findAllByOrdemServicoIdAndDataEncerramentoIsNull(ordemServico);
         if (listaPendencias.isEmpty()){
